@@ -116,7 +116,7 @@ function logout() {
 }
 
 // ==========================================
-// 4. NAVIGASI MENU SIDEBAR (OPTIMASI TOMBOL KEMBALI HP)
+// 4. NAVIGASI MENU SIDEBAR & PENGATURAN TOMBOL KEMBALI HP
 // ==========================================
 function pilihMenu(menu, pushHistory = true) {
   ['view-dashboard', 'view-kasir', 'view-stok', 'view-riwayat'].forEach(id => {
@@ -137,8 +137,9 @@ function pilihMenu(menu, pushHistory = true) {
 
   const breadcrumb = document.getElementById('header-breadcrumb');
 
-  if (pushHistory && window.history && window.history.replaceState) {
-    window.history.replaceState({ activeMenu: menu }, "", `#${menu}`);
+  // Merekam riwayat navigasi agar tombol kembali HP mengarah ke Kasir terlebih dahulu
+  if (pushHistory && window.history && window.history.pushState) {
+    window.history.pushState({ activeMenu: menu }, "", `#${menu}`);
   }
 
   if (menu === 'dashboard') {
@@ -176,11 +177,12 @@ function pilihMenu(menu, pushHistory = true) {
   }
 }
 
+// Menangani tombol kembali (back) di HP agar kembali ke Kasir secara mulus
 window.addEventListener('popstate', (event) => {
   if (event.state && event.state.activeMenu) {
     pilihMenu(event.state.activeMenu, false);
   } else {
-    pilihMenu('dashboard', false);
+    pilihMenu('kasir', false);
   }
 });
 
@@ -293,12 +295,12 @@ function setTipePenjualan(tipe) {
   const labelMode = document.getElementById('label-mode-harga');
 
   if (tipe === 'eceran') {
-    if(btnE) btnE.className = "flex-1 py-1.5 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer";
-    if(btnG) btnG.className = "flex-1 py-1.5 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer";
+    if(btnE) btnE.className = "flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer";
+    if(btnG) btnG.className = "flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer";
     if(labelMode) labelMode.innerText = "ECERAN";
   } else {
-    if(btnG) btnG.className = "flex-1 py-1.5 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer";
-    if(btnE) btnE.className = "flex-1 py-1.5 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer";
+    if(btnG) btnG.className = "flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer";
+    if(btnE) btnE.className = "flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer";
     if(labelMode) labelMode.innerText = "GROSIR";
   }
   
@@ -443,23 +445,23 @@ function updateKeranjangUI() {
     const badgeColor = item.kategori === 'aquarium' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-600';
 
     container.innerHTML += `
-      <div class="pt-3 first:pt-0 pb-3 space-y-2">
+      <div class="pt-2 first:pt-0 pb-2 space-y-1.5">
         <div class="flex justify-between items-center gap-2">
-          <div class="flex items-center gap-2">
-            <span class="${badgeColor} text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0">${katLabel}</span>
+          <div class="flex items-center gap-1.5">
+            <span class="${badgeColor} text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">${katLabel}</span>
             <span class="font-bold text-slate-800 text-xs leading-snug">${item.nama}</span>
           </div>
-          <button onclick="hapusItemKeranjang(${index})" class="text-rose-500 hover:text-rose-700 font-semibold text-xs cursor-pointer shrink-0">Hapus</button>
+          <button onclick="hapusItemKeranjang(${index})" class="text-rose-500 hover:text-rose-700 font-semibold text-[11px] cursor-pointer shrink-0">Hapus</button>
         </div>
         
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-1">
-            <span class="text-[11px] text-slate-500">Qty:</span>
-            <input type="number" min="1" value="${item.qty}" onchange="updateQtyItem(${index}, this.value)" class="w-14 bg-white border border-slate-200 rounded-lg px-2 py-1 font-bold text-center text-slate-800 text-xs focus:outline-none focus:border-indigo-600">
+            <span class="text-[10px] text-slate-500">Qty:</span>
+            <input type="number" min="1" value="${item.qty}" onchange="updateQtyItem(${index}, this.value)" class="w-12 bg-white border border-slate-200 rounded px-1.5 py-0.5 font-bold text-center text-slate-800 text-xs focus:outline-none focus:border-indigo-600">
           </div>
           <div class="flex items-center gap-1">
-            <span class="text-[11px] text-slate-500">Harga:</span>
-            <input type="number" value="${item.harga}" onchange="updateHargaItem(${index}, this.value)" class="w-24 bg-white border border-slate-200 rounded-lg px-2 py-1 font-bold text-center text-indigo-600 text-xs focus:outline-none focus:border-indigo-600">
+            <span class="text-[10px] text-slate-500">Harga:</span>
+            <input type="number" value="${item.harga}" onchange="updateHargaItem(${index}, this.value)" class="w-20 bg-white border border-slate-200 rounded px-1.5 py-0.5 font-bold text-center text-indigo-600 text-xs focus:outline-none focus:border-indigo-600">
           </div>
         </div>
 
@@ -482,7 +484,7 @@ function hitungKembalian() {
 
   if (uangTunaiInput.value.trim() === "") {
     labelKembalian.innerText = "Rp 0";
-    labelKembalian.className = "font-bold text-slate-600 text-sm";
+    labelKembalian.className = "font-bold text-slate-600 text-xs";
     return;
   }
 
@@ -491,10 +493,10 @@ function hitungKembalian() {
 
   if (selisih >= 0) {
     labelKembalian.innerText = "Rp " + selisih.toLocaleString('id-ID');
-    labelKembalian.className = "font-bold text-emerald-600 text-sm";
+    labelKembalian.className = "font-bold text-emerald-600 text-xs";
   } else {
     labelKembalian.innerText = "Kurang Rp " + Math.abs(selisih).toLocaleString('id-ID');
-    labelKembalian.className = "font-bold text-rose-600 text-sm";
+    labelKembalian.className = "font-bold text-rose-600 text-xs";
   }
 }
 
