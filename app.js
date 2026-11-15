@@ -27,11 +27,11 @@ const USERS = [
 ];
 
 let dataStok = [
-  { id: 1, kategori: "ikan", nama: "Ikan Gurame Segar", hargaEceran: 45000, hargaGrosir: 38000, stok: 20 },
-  { id: 2, kategori: "ikan", nama: "Ikan Nila Merah", hargaEceran: 32000, hargaGrosir: 27000, stok: 35 },
-  { id: 3, kategori: "barang", nama: "Pakan Ikan Pelet 1kg", hargaEceran: 20000, hargaGrosir: 16500, stok: 50 },
-  { id: 4, kategori: "mesin", nama: "Mesin Aerator Oksigen 1 Lubang", hargaEceran: 45000, hargaGrosir: 38000, stok: 15 },
-  { id: 5, kategori: "aquarium", nama: "Aquarium Kaca Custom", ukuran: {p: 60, l: 30, t: 35}, hargaEceran: 150000, hargaGrosir: 130000, stok: 3 }
+  { kategori: "ikan", nama: "Ikan Gurame Segar", hargaEceran: 45000, hargaGrosir: 38000, stok: 20 },
+  { kategori: "ikan", nama: "Ikan Nila Merah", hargaEceran: 32000, hargaGrosir: 27000, stok: 35 },
+  { kategori: "barang", nama: "Pakan Ikan Pelet 1kg", hargaEceran: 20000, hargaGrosir: 16500, stok: 50 },
+  { kategori: "mesin", nama: "Mesin Aerator Oksigen 1 Lubang", hargaEceran: 45000, hargaGrosir: 38000, stok: 15 },
+  { kategori: "aquarium", nama: "Aquarium Kaca Custom", ukuran: {p: 60, l: 30, t: 35}, hargaEceran: 150000, hargaGrosir: 130000, stok: 3 }
 ];
 
 let dataRiwayat = [];
@@ -306,7 +306,7 @@ function setTipePenjualan(tipe) {
   });
 
   keranjang.forEach(item => {
-    const prod = dataStok.find(p => p.id === item.id);
+    const prod = dataStok[item.indexStok];
     if (prod) item.harga = tipe === 'eceran' ? prod.hargaEceran : prod.hargaGrosir;
   });
 
@@ -322,35 +322,33 @@ function renderKasirProduk() {
   const keyword = inputSearch ? inputSearch.value.toLowerCase().trim() : '';
   container.innerHTML = '';
 
-  const filtered = dataStok.filter(item => {
+  dataStok.forEach((item, index) => {
     const matchKat = keyword !== '' ? true : (kategoriAktifKasir === 'semua' || item.kategori === kategoriAktifKasir);
     const matchSearch = item.nama.toLowerCase().includes(keyword);
-    return matchKat && matchSearch;
-  });
 
-  if (filtered.length === 0) {
-    container.innerHTML = '<p class="text-slate-400 text-xs col-span-full text-center py-10">Produk tidak ditemukan.</p>';
-    return;
-  }
-
-  filtered.forEach(item => {
-    const hargaAktif = tipePenjualan === 'eceran' ? item.hargaEceran : item.hargaGrosir;
-    container.innerHTML += `
-      <div class="bg-white border border-slate-200/80 rounded-2xl p-3 flex flex-col justify-between hover:shadow-md transition relative group">
-        <div>
-          <div class="flex justify-between items-start mb-2">
-            <span class="text-[9px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase tracking-wider">${item.kategori}</span>
-            <span class="text-[9px] text-slate-400 font-medium">Stok: ${item.stok}</span>
+    if (matchKat && matchSearch) {
+      const hargaAktif = tipePenjualan === 'eceran' ? item.hargaEceran : item.hargaGrosir;
+      container.innerHTML += `
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-3 flex flex-col justify-between hover:shadow-md transition relative group">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-[9px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase tracking-wider">${item.kategori}</span>
+              <span class="text-[9px] text-slate-400 font-medium">Stok: ${item.stok}</span>
+            </div>
+            <h4 class="font-bold text-slate-800 text-xs group-hover:text-indigo-600 transition mb-1 line-clamp-2">${item.nama}</h4>
           </div>
-          <h4 class="font-bold text-slate-800 text-xs group-hover:text-indigo-600 transition mb-1 line-clamp-2">${item.nama}</h4>
+          <div class="mt-3 flex justify-between items-end">
+            <span class="text-indigo-600 font-bold text-xs">Rp ${hargaAktif.toLocaleString('id-ID')}</span>
+            <button onclick="tambahKeKeranjang(${index})" class="bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white w-7 h-7 rounded-xl flex items-center justify-center font-bold text-sm transition shadow-sm cursor-pointer">+</button>
+          </div>
         </div>
-        <div class="mt-3 flex justify-between items-end">
-          <span class="text-indigo-600 font-bold text-xs">Rp ${hargaAktif.toLocaleString('id-ID')}</span>
-          <button onclick="tambahKeKeranjang(${item.id})" class="bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white w-7 h-7 rounded-xl flex items-center justify-center font-bold text-sm transition shadow-sm cursor-pointer">+</button>
-        </div>
-      </div>
-    `;
+      `;
+    }
   });
+
+  if (container.innerHTML === '') {
+    container.innerHTML = '<p class="text-slate-400 text-xs col-span-full text-center py-10">Produk tidak ditemukan.</p>';
+  }
 }
 
 function handleSearchEnter(e) {
@@ -360,8 +358,8 @@ function handleSearchEnter(e) {
   }
 }
 
-function tambahKeKeranjang(id) {
-  const produk = dataStok.find(p => p.id === id);
+function tambahKeKeranjang(indexStok) {
+  const produk = dataStok[indexStok];
   if (!produk) return;
 
   if (produk.stok <= 0) {
@@ -370,7 +368,7 @@ function tambahKeKeranjang(id) {
   }
 
   const hargaAktif = tipePenjualan === 'eceran' ? produk.hargaEceran : produk.hargaGrosir;
-  const itemExist = keranjang.find(k => k.id === id);
+  const itemExist = keranjang.find(k => k.indexStok === indexStok);
 
   if (itemExist) {
     if (itemExist.qty + 1 <= produk.stok) {
@@ -381,7 +379,7 @@ function tambahKeKeranjang(id) {
     }
   } else {
     keranjang.push({ 
-      id: produk.id, 
+      indexStok: indexStok, 
       kategori: produk.kategori, 
       nama: produk.nama, 
       harga: hargaAktif, 
@@ -590,7 +588,7 @@ function prosesBayar() {
   }
   
   keranjang.forEach(kItem => {
-    const p = dataStok.find(item => item.id === kItem.id);
+    const p = dataStok[kItem.indexStok];
     if (p) p.stok -= kItem.qty;
   });
   simpanStorage();
@@ -715,39 +713,37 @@ function renderTabelAdmin() {
   const keyword = inputSearch ? inputSearch.value.toLowerCase() : '';
   container.innerHTML = '';
 
-  const filtered = dataStok.filter(item => {
+  dataStok.forEach((item, index) => {
     const matchKat = item.kategori === kategoriAktifAdmin;
     const matchSearch = item.nama.toLowerCase().includes(keyword);
-    return matchKat && matchSearch;
+
+    if (matchKat && matchSearch) {
+      const labelKat = item.kategori === 'aquarium' && item.ukuran ? `📐 Aquarium (${item.ukuran.p}x${item.ukuran.l}x${item.ukuran.t} cm)` : item.kategori.toUpperCase();
+      
+      container.innerHTML += `
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+          <td class="p-3 font-bold text-slate-800">${item.nama}</td>
+          <td class="p-3"><span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded uppercase text-[10px] font-bold">${labelKat}</span></td>
+          <td class="p-3">Rp ${item.hargaEceran.toLocaleString('id-ID')}</td>
+          <td class="p-3">Rp ${item.hargaGrosir.toLocaleString('id-ID')}</td>
+          <td class="p-3"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">${item.stok}</span></td>
+          <td class="p-3 text-center space-x-2">
+            <button onclick="editProduk(${index})" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Edit</button>
+            <button onclick="hapusProduk(${index})" class="bg-red-50 text-red-600 hover:bg-red-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Hapus</button>
+          </td>
+        </tr>
+      `;
+    }
   });
 
-  if (filtered.length === 0) {
+  if (container.innerHTML === '') {
     container.innerHTML = '<tr><td colspan="6" class="text-slate-400 text-center py-6">Data tidak ditemukan.</td></tr>';
-    return;
   }
-
-  filtered.forEach((item) => {
-    const labelKat = item.kategori === 'aquarium' ? `📐 Aquarium (${item.ukuran.p}x${item.ukuran.l}x${item.ukuran.t} cm)` : item.kategori.toUpperCase();
-    
-    container.innerHTML += `
-      <tr class="border-b border-slate-100 hover:bg-slate-50">
-        <td class="p-3 font-bold text-slate-800">${item.nama}</td>
-        <td class="p-3"><span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded uppercase text-[10px] font-bold">${labelKat}</span></td>
-        <td class="p-3">Rp ${item.hargaEceran.toLocaleString('id-ID')}</td>
-        <td class="p-3">Rp ${item.hargaGrosir.toLocaleString('id-ID')}</td>
-        <td class="p-3"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">${item.stok}</span></td>
-        <td class="p-3 text-center space-x-2">
-          <button onclick="editProduk(${item.id})" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Edit</button>
-          <button onclick="hapusProduk(${item.id})" class="bg-red-50 text-red-600 hover:bg-red-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Hapus</button>
-        </td>
-      </tr>
-    `;
-  });
 }
 
 function simpanProdukAdmin(e) {
   e.preventDefault();
-  const editId = document.getElementById('edit-id').value;
+  const editIndex = document.getElementById('edit-id').value;
   const nama = document.getElementById('nama-produk').value;
   const stok = parseInt(document.getElementById('stok-produk').value) || 0;
 
@@ -768,12 +764,12 @@ function simpanProdukAdmin(e) {
     hargaGrosir = parseInt(document.getElementById('harga-grosir').value) || 0;
   }
 
-  if (editId === "") {
-    dataStok.push({ id: Date.now(), kategori, nama, hargaEceran, hargaGrosir, stok, ukuran });
+  if (editIndex === "") {
+    dataStok.push({ kategori, nama, hargaEceran, hargaGrosir, stok, ukuran });
     alert('Produk berhasil ditambahkan!');
   } else {
-    const idx = dataStok.findIndex(p => p.id == editId);
-    if (idx !== -1) {
+    const idx = parseInt(editIndex);
+    if (!isNaN(idx) && dataStok[idx]) {
       dataStok[idx].kategori = kategori;
       dataStok[idx].nama = nama;
       dataStok[idx].hargaEceran = hargaEceran;
@@ -790,11 +786,11 @@ function simpanProdukAdmin(e) {
   renderDashboardStats();
 }
 
-function editProduk(id) {
-  const item = dataStok.find(p => p.id === id);
+function editProduk(index) {
+  const item = dataStok[index];
   if (!item) return;
 
-  document.getElementById('edit-id').value = item.id;
+  document.getElementById('edit-id').value = index;
   document.getElementById('nama-produk').value = item.nama;
   document.getElementById('stok-produk').value = item.stok;
 
@@ -828,9 +824,9 @@ function resetFormAdmin() {
   if(btnCancel) btnCancel.classList.add('hidden');
 }
 
-function hapusProduk(id) {
+function hapusProduk(index) {
   if (confirm('Yakin ingin menghapus produk ini?')) {
-    dataStok = dataStok.filter(item => item.id !== id);
+    dataStok.splice(index, 1);
     simpanStorage();
     renderTabelAdmin();
     renderDashboardStats();
