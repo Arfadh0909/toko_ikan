@@ -34,7 +34,6 @@ let tipePenjualan = 'eceran';
 let kategoriAktifKasir = 'semua';
 let kategoriAktifAdmin = 'ikan';
 
-// Ambil data stok dari Firebase (menggunakan idFirebase sebagai kunci unik)
 onValue(ref(db, 'toko_ikan_stok/'), (snapshot) => {
   const data = snapshot.val();
   if (data) {
@@ -455,8 +454,8 @@ function renderKeranjangDesktopHTML(container, totalEl) {
       <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
     </div>
     
-    <!-- Bagian List Item yang bisa di-scroll fleksibel di tengah -->
-    <div class="space-y-3 my-1 text-xs divide-y divide-slate-100 overflow-y-auto flex-1 pr-1 border-y border-slate-100 py-2">
+    <!-- Area List Item yang Fleksibel dan Bisa Di-scroll -->
+    <div class="space-y-3 my-1 text-xs divide-y divide-slate-100 overflow-y-auto flex-1 pr-1 border-y border-slate-100 py-2 min-h-[140px] max-h-[280px]">
   `;
 
   if (keranjang.length === 0) {
@@ -490,13 +489,13 @@ function renderKeranjangDesktopHTML(container, totalEl) {
   html += `
     </div>
     
-    <!-- Bagian Bawah Panel Pembayaran yang Tetap & Rapi -->
+    <!-- Bagian Bawah Panel Pembayaran yang Tetap Menempel Rapi dan Kelihatan -->
     <div class="space-y-2 pt-2 shrink-0 mt-auto border-t border-slate-100">
       <div class="flex justify-between items-center"><span class="text-xs text-slate-500">Mode Harga</span><span id="label-mode-harga" class="text-xs font-bold text-indigo-600 uppercase">ECERAN</span></div>
       <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-900">Total Tagihan</span><span class="font-black text-slate-900 text-base" id="total-harga">Rp ${total.toLocaleString('id-ID')}</span></div>
       <div><label class="text-[11px] font-medium text-slate-600 block mb-0.5">Uang Tunai (Rp)</label><input type="number" id="uang-tunai" oninput="hitungKembalian()" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-right text-slate-800" placeholder="Ketik nominal..."></div>
       <div class="flex justify-between items-center text-xs"><span class="text-slate-600">Kembalian</span><span id="label-kembalian" class="font-bold text-slate-600 text-xs">Rp 0</span></div>
-      <button onclick="prosesBayar()" class="w-full bg-[#008f5a] hover:bg-[#007a4d] text-white font-bold py-3 rounded-2xl text-xs transition cursor-pointer mt-1 uppercase">Proses & Bayar</button>
+      <button onclick="prosesBayar()" class="w-full bg-[#008f5a] hover:bg-[#007a4d] text-white font-bold py-3 rounded-2xl text-xs transition cursor-pointer mt-1 uppercase shadow-md">Proses & Bayar</button>
     </div>
   `;
   container.innerHTML = html;
@@ -789,7 +788,6 @@ function editProduk(idFirebase) {
     return;
   }
 
-  // Pindah ke menu kategori yang sesuai terlebih dahulu agar form tampil benar
   pilihMenu(item.kategori);
 
   document.getElementById('edit-id').value = item.idFirebase;
@@ -810,7 +808,6 @@ function editProduk(idFirebase) {
   document.getElementById('btn-submit-form').innerText = "Update Produk";
   document.getElementById('btn-cancel-edit').classList.remove('hidden');
 
-  // Scroll otomatis ke form edit di sebelah kiri agar langsung terlihat oleh user
   const formEl = document.getElementById('form-tambah-produk');
   if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
