@@ -80,6 +80,7 @@ function refreshTampilanAktif() {
   if (typeof renderKasirProduk === 'function') renderKasirProduk();
   if (typeof renderTabelAdmin === 'function') renderTabelAdmin();
   if (typeof renderTabelRiwayat === 'function') renderTabelRiwayat();
+  if (typeof updateKeranjangUI === 'function') updateKeranjangUI();
 }
 
 // ==========================================
@@ -102,7 +103,7 @@ if (loginForm) {
   });
 }
 
-function checkAuth(roleReq) {
+function checkAuth() {
   const session = JSON.parse(localStorage.getItem('user_session'));
   if (!session) {
     alert('Akses ditolak! Silakan login terlebih dahulu.');
@@ -116,7 +117,7 @@ function logout() {
 }
 
 // ==========================================
-// 4. NAVIGASI MENU SIDEBAR & TOMBOL KEMBALI HP
+// 4. NAVIGASI MENU SIDEBAR
 // ==========================================
 function pilihMenu(menu, pushHistory = true) {
   ['view-dashboard', 'view-kasir', 'view-stok', 'view-riwayat'].forEach(id => {
@@ -149,6 +150,7 @@ function pilihMenu(menu, pushHistory = true) {
     document.getElementById('view-kasir').classList.remove('hidden');
     if(breadcrumb) breadcrumb.innerText = "KASIR / POS";
     renderKasirProduk();
+    updateKeranjangUI();
   } else if (menu === 'riwayat') {
     document.getElementById('view-riwayat').classList.remove('hidden');
     if(breadcrumb) breadcrumb.innerText = "RIWAYAT TRANSAKSI";
@@ -179,8 +181,6 @@ function pilihMenu(menu, pushHistory = true) {
 window.addEventListener('popstate', (event) => {
   if (event.state && event.state.activeMenu) {
     pilihMenu(event.state.activeMenu, false);
-  } else {
-    pilihMenu('kasir', false);
   }
 });
 
@@ -289,7 +289,6 @@ function pilihKategoriKasir(kategori) {
 function setTipePenjualan(tipe) {
   tipePenjualan = tipe;
   
-  // Sinkronisasi tombol eceran/grosir di desktop & HP
   ['', '-hp'].forEach(sufiks => {
     const btnE = document.getElementById('btn-eceran' + sufiks);
     const btnG = document.getElementById('btn-grosir' + sufiks);
@@ -425,25 +424,19 @@ function kosongkanKeranjang() {
 }
 
 function updateKeranjangUI() {
-  // Update badge jumlah item di tombol melayang HP
   const badge = document.getElementById('badge-total-item');
   const totalItemCount = keranjang.reduce((sum, item) => sum + item.qty, 0);
   if (badge) badge.innerText = totalItemCount;
 
-  // Render untuk Container Desktop & HP
   ['', '-hp'].forEach(sufiks => {
     const container = document.getElementById(sufiks === '' ? 'panel-keranjang-desktop' : 'keranjang-list-hp');
     const totalEl = document.getElementById(sufiks === '' ? 'total-harga' : 'total-harga-hp');
     
-    // Jika container desktop tersembunyi (di HP), lewati rendering desktop
-    if (sufiks === '' && (!container || container.classList.contains('hidden'))) return;
-    if (!container && sufiks === '-hp') return;
+    if (!container) return;
 
     if (sufiks === '') {
-      // Struktur HTML keranjang lengkap untuk versi Desktop
       renderKeranjangDesktopHTML(container, totalEl);
     } else {
-      // Struktur HTML list item untuk versi Modal HP
       renderKeranjangHPListHTML(container, totalEl);
     }
   });
@@ -549,12 +542,11 @@ function renderKeranjangHPListHTML(container, totalEl) {
 function hitungKembalian() {
   const total = keranjang.reduce((sum, item) => sum + (item.harga * item.qty), 0);
   
-  // Ambil input uang tunai dari desktop atau HP modal
   const inputDesktop = document.getElementById('uang-tunai');
   const inputHP = document.getElementById('uang-tunai-hp');
-  const uangTunaiVal = (inputHP && !inputHP.closest('#modal-keranjang-hp').classList.contains('hidden')) ? inputHP.value : (inputDesktop ? inputDesktop.value : '');
+  const modalHp = document.getElementById('modal-keranjang-hp');
+  const uangTunaiVal = (inputHP && modalHp && !modalHp.classList.contains('hidden')) ? inputHP.value : (inputDesktop ? inputDesktop.value : '');
 
-  // Sinkronkan nilai input uang tunai antar keduanya
   if (inputDesktop && inputHP) {
     if (document.activeElement === inputDesktop) inputHP.value = inputDesktop.value;
     if (document.activeElement === inputHP) inputDesktop.value = inputHP.value;
@@ -631,7 +623,12 @@ function prosesBayar() {
 
 function bukaModalKeranjangHP() {
   const modal = document.getElementById('modal-keranjang-hp');
-  if (modal) modal.classList.remove('hidden');
+  if (modal) {
+    modal.classList.remove('hidden');
+    if (window.history && window.history.pushState) {
+      window.history.pushState({ modalOpen: true }, "", window.location.href);
+    }
+  }
 }
 
 function tutupModalKeranjangHP() {
@@ -730,7 +727,6 @@ function renderTabelAdmin() {
   }
 
   filtered.forEach((item) => {
-    const originalIndex = dataStok.indexOf(item);
     const labelKat = item.kategori === 'aquarium' ? `📐 Aquarium (${item.ukuran.p}x${item.ukuran.l}x${item.ukuran.t} cm)` : item.kategori.toUpperCase();
     
     container.innerHTML += `
@@ -741,7 +737,7 @@ function renderTabelAdmin() {
         <td class="p-3">Rp ${item.hargaGrosir.toLocaleString('id-ID')}</td>
         <td class="p-3"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">${item.stok}</span></td>
         <td class="p-3 text-center space-x-2">
-          <button onclick="editProduk(${originalIndex})" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Edit</button>
+          <button onclick="editProduk(${item.id})" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Edit</button>
           <button onclick="hapusProduk(${item.id})" class="bg-red-50 text-red-600 hover:bg-red-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Hapus</button>
         </td>
       </tr>
@@ -751,7 +747,7 @@ function renderTabelAdmin() {
 
 function simpanProdukAdmin(e) {
   e.preventDefault();
-  const editIndex = document.getElementById('edit-index').value;
+  const editId = document.getElementById('edit-id').value;
   const nama = document.getElementById('nama-produk').value;
   const stok = parseInt(document.getElementById('stok-produk').value) || 0;
 
@@ -772,18 +768,20 @@ function simpanProdukAdmin(e) {
     hargaGrosir = parseInt(document.getElementById('harga-grosir').value) || 0;
   }
 
-  if (editIndex === "") {
+  if (editId === "") {
     dataStok.push({ id: Date.now(), kategori, nama, hargaEceran, hargaGrosir, stok, ukuran });
     alert('Produk berhasil ditambahkan!');
   } else {
-    const idx = parseInt(editIndex);
-    dataStok[idx].kategori = kategori;
-    dataStok[idx].nama = nama;
-    dataStok[idx].hargaEceran = hargaEceran;
-    dataStok[idx].hargaGrosir = hargaGrosir;
-    dataStok[idx].stok = stok;
-    dataStok[idx].ukuran = ukuran;
-    alert('Produk berhasil diperbarui!');
+    const idx = dataStok.findIndex(p => p.id == editId);
+    if (idx !== -1) {
+      dataStok[idx].kategori = kategori;
+      dataStok[idx].nama = nama;
+      dataStok[idx].hargaEceran = hargaEceran;
+      dataStok[idx].hargaGrosir = hargaGrosir;
+      dataStok[idx].stok = stok;
+      dataStok[idx].ukuran = ukuran;
+      alert('Produk berhasil diperbarui!');
+    }
   }
 
   simpanStorage();
@@ -792,9 +790,11 @@ function simpanProdukAdmin(e) {
   renderDashboardStats();
 }
 
-function editProduk(index) {
-  const item = dataStok[index];
-  document.getElementById('edit-index').value = index;
+function editProduk(id) {
+  const item = dataStok.find(p => p.id === id);
+  if (!item) return;
+
+  document.getElementById('edit-id').value = item.id;
   document.getElementById('nama-produk').value = item.nama;
   document.getElementById('stok-produk').value = item.stok;
 
@@ -818,8 +818,8 @@ function editProduk(index) {
 function resetFormAdmin() {
   const form = document.getElementById('form-tambah-produk');
   if(form) form.reset();
-  const editIdx = document.getElementById('edit-index');
-  if(editIdx) editIdx.value = "";
+  const editId = document.getElementById('edit-id');
+  if(editId) editId.value = "";
   const formTitle = document.getElementById('form-title');
   if(formTitle) formTitle.innerText = "Tambah Produk Baru";
   const btnSubmit = document.getElementById('btn-submit-form');
