@@ -2,7 +2,7 @@
 // 1. KONEKSI FIREBASE (DATABASE ONLINE)
 // ==========================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCnS8fdTvX-mk86T9kNBOE7p8CaF6CRDNI",
@@ -26,14 +26,7 @@ const USERS = [
   { username: "admin", password: "888", role: "admin", redirect: "dashboard.html" }
 ];
 
-let dataStok = [
-  { id: 1, kategori: "ikan", nama: "Ikan Gurame Segar", hargaEceran: 45000, hargaGrosir: 38000, stok: 20 },
-  { id: 2, kategori: "ikan", nama: "Ikan Nila Merah", hargaEceran: 32000, hargaGrosir: 27000, stok: 35 },
-  { id: 3, kategori: "barang", nama: "Pakan Ikan Pelet 1kg", hargaEceran: 20000, hargaGrosir: 16500, stok: 50 },
-  { id: 4, kategori: "mesin", nama: "Mesin Aerator Oksigen 1 Lubang", hargaEceran: 45000, hargaGrosir: 38000, stok: 15 },
-  { id: 5, kategori: "aquarium", nama: "Aquarium Kaca Custom", ukuran: {p: 60, l: 30, t: 35}, hargaEceran: 150000, hargaGrosir: 130000, stok: 3 }
-];
-
+let dataStok = [];
 let dataRiwayat = [];
 let dataCatatanModal = [];
 let keranjang = [];
@@ -41,13 +34,22 @@ let tipePenjualan = 'eceran';
 let kategoriAktifKasir = 'semua';
 let kategoriAktifAdmin = 'ikan';
 
+// Ambil data stok dari Firebase (menggunakan idFirebase sebagai kunci unik)
 onValue(ref(db, 'toko_ikan_stok/'), (snapshot) => {
   const data = snapshot.val();
   if (data) {
-    dataStok = Array.isArray(data) ? data : Object.values(data);
+    dataStok = Object.keys(data).map(key => ({ idFirebase: key, ...data[key] }));
     refreshTampilanAktif();
   } else {
-    set(ref(db, 'toko_ikan_stok/'), dataStok);
+    // Default data jika kosong
+    const defaultData = {
+      p1: { kategori: "ikan", nama: "Ikan Gurame Segar", hargaEceran: 45000, hargaGrosir: 38000, stok: 20 },
+      p2: { kategori: "ikan", nama: "Ikan Nila Merah", hargaEceran: 32000, hargaGrosir: 27000, stok: 35 },
+      p3: { kategori: "barang", nama: "Pakan Ikan Pelet 1kg", hargaEceran: 20000, hargaGrosir: 16500, stok: 50 },
+      p4: { kategori: "mesin", nama: "Mesin Aerator Oksigen 1 Lubang", hargaEceran: 45000, hargaGrosir: 38000, stok: 15 },
+      p5: { kategori: "aquarium", nama: "Aquarium Kaca Custom", ukuran: {p: 60, l: 30, t: 35}, hargaEceran: 150000, hargaGrosir: 130000, stok: 3 }
+    };
+    set(ref(db, 'toko_ikan_stok/'), defaultData);
   }
 });
 
@@ -70,10 +72,6 @@ onValue(ref(db, 'toko_ikan_modal/'), (snapshot) => {
   }
   refreshTampilanAktif();
 });
-
-function simpanStorage() {
-  set(ref(db, 'toko_ikan_stok/'), dataStok);
-}
 
 function refreshTampilanAktif() {
   if (typeof renderDashboardStats === 'function') renderDashboardStats();
@@ -306,7 +304,7 @@ function setTipePenjualan(tipe) {
   });
 
   keranjang.forEach(item => {
-    const prod = dataStok.find(p => p.id === item.id);
+    const prod = dataStok.find(p => p.idFirebase === item.idFirebase);
     if (prod) item.harga = tipe === 'eceran' ? prod.hargaEceran : prod.hargaGrosir;
   });
 
@@ -339,7 +337,7 @@ function renderKasirProduk() {
           </div>
           <div class="mt-3 flex justify-between items-end">
             <span class="text-indigo-600 font-bold text-xs">Rp ${hargaAktif.toLocaleString('id-ID')}</span>
-            <button onclick="tambahKeKeranjang(${item.id})" class="bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white w-7 h-7 rounded-xl flex items-center justify-center font-bold text-sm transition shadow-sm cursor-pointer">+</button>
+            <button onclick="tambahKeKeranjang('${item.idFirebase}')" class="bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white w-7 h-7 rounded-xl flex items-center justify-center font-bold text-sm transition shadow-sm cursor-pointer">+</button>
           </div>
         </div>
       `;
@@ -358,8 +356,8 @@ function handleSearchEnter(e) {
   }
 }
 
-function tambahKeKeranjang(id) {
-  const produk = dataStok.find(p => p.id === id);
+function tambahKeKeranjang(idFirebase) {
+  const produk = dataStok.find(p => p.idFirebase === idFirebase);
   if (!produk) return;
 
   if (produk.stok <= 0) {
@@ -368,7 +366,7 @@ function tambahKeKeranjang(id) {
   }
 
   const hargaAktif = tipePenjualan === 'eceran' ? produk.hargaEceran : produk.hargaGrosir;
-  const itemExist = keranjang.find(k => k.id === id);
+  const itemExist = keranjang.find(k => k.idFirebase === idFirebase);
 
   if (itemExist) {
     if (itemExist.qty + 1 <= produk.stok) {
@@ -379,7 +377,7 @@ function tambahKeKeranjang(id) {
     }
   } else {
     keranjang.push({ 
-      id: produk.id, 
+      idFirebase: produk.idFirebase, 
       kategori: produk.kategori, 
       nama: produk.nama, 
       harga: hargaAktif, 
@@ -457,7 +455,7 @@ function renderKeranjangDesktopHTML(container, totalEl) {
       <button id="btn-eceran" onclick="setTipePenjualan('eceran')" class="flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer">Eceran</button>
       <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
     </div>
-    <!-- List item di PC: Tampil pas dan rapi tanpa scroll berlebih -->
+    <!-- List item fleksibel tanpa scroll berlebih -->
     <div class="space-y-3 my-1 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2">
   `;
 
@@ -589,10 +587,13 @@ function prosesBayar() {
   }
   
   keranjang.forEach(kItem => {
-    const p = dataStok.find(item => item.id === kItem.id);
-    if (p) p.stok -= kItem.qty;
+    const p = dataStok.find(item => item.idFirebase === kItem.idFirebase);
+    if (p) {
+      p.stok -= kItem.qty;
+      // Update stok langsung ke Firebase
+      set(ref(db, `toko_ikan_stok/${p.idFirebase}/stok`), p.stok);
+    }
   });
-  simpanStorage();
   
   const namaPelangganInput = document.getElementById('nama-pelanggan-hp') || document.getElementById('nama-pelanggan');
   const namaPelanggan = namaPelangganInput ? namaPelangganInput.value : 'Umum';
@@ -729,8 +730,8 @@ function renderTabelAdmin() {
           <td class="p-3">Rp ${item.hargaGrosir.toLocaleString('id-ID')}</td>
           <td class="p-3"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">${item.stok}</span></td>
           <td class="p-3 text-center space-x-2">
-            <button onclick="editProduk(${item.id})" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Edit</button>
-            <button onclick="hapusProduk(${item.id})" class="bg-red-50 text-red-600 hover:bg-red-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Hapus</button>
+            <button onclick="editProduk('${item.idFirebase}')" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Edit</button>
+            <button onclick="hapusProduk('${item.idFirebase}')" class="bg-red-50 text-red-600 hover:bg-red-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Hapus</button>
           </td>
         </tr>
       `;
@@ -766,33 +767,27 @@ function simpanProdukAdmin(e) {
   }
 
   if (editId === "") {
-    const newId = Date.now();
-    dataStok.push({ id: newId, kategori, nama, hargaEceran, hargaGrosir, stok, ukuran });
+    // Tambah baru ke Firebase
+    push(ref(db, 'toko_ikan_stok/'), { kategori, nama, hargaEceran, hargaGrosir, stok, ukuran });
     alert('Produk berhasil ditambahkan!');
   } else {
-    const idx = dataStok.findIndex(p => p.id == editId);
-    if (idx !== -1) {
-      dataStok[idx].kategori = kategori;
-      dataStok[idx].nama = nama;
-      dataStok[idx].hargaEceran = hargaEceran;
-      dataStok[idx].hargaGrosir = hargaGrosir;
-      dataStok[idx].stok = stok;
-      dataStok[idx].ukuran = ukuran;
-      alert('Produk berhasil diperbarui!');
-    }
+    // Update data produk di Firebase berdasarkan idFirebase
+    update(ref(db, `toko_ikan_stok/${editId}`), {
+      kategori, nama, hargaEceran, hargaGrosir, stok, ukuran
+    });
+    alert('Produk berhasil diperbarui!');
   }
 
-  simpanStorage();
   renderTabelAdmin();
   resetFormAdmin();
   renderDashboardStats();
 }
 
-function editProduk(id) {
-  const item = dataStok.find(p => p.id === id);
+function editProduk(idFirebase) {
+  const item = dataStok.find(p => p.idFirebase === idFirebase);
   if (!item) return;
 
-  document.getElementById('edit-id').value = item.id;
+  document.getElementById('edit-id').value = item.idFirebase;
   document.getElementById('nama-produk').value = item.nama;
   document.getElementById('stok-produk').value = item.stok;
 
@@ -826,10 +821,9 @@ function resetFormAdmin() {
   if(btnCancel) btnCancel.classList.add('hidden');
 }
 
-function hapusProduk(id) {
+function hapusProduk(idFirebase) {
   if (confirm('Yakin ingin menghapus produk ini?')) {
-    dataStok = dataStok.filter(item => item.id !== id);
-    simpanStorage();
+    remove(ref(db, `toko_ikan_stok/${idFirebase}`));
     renderTabelAdmin();
     renderDashboardStats();
   }
