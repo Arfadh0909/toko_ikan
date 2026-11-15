@@ -130,75 +130,83 @@
           </div>
         </div>
 
-        <!-- VIEW 2: KASIR / POS (Dibuat Ringkas, Padat, & Nyaman di HP) -->
+        <!-- VIEW 2: KASIR / POS (Keranjang di ATAS, Produk grid kecil 2 kolom di bawah) -->
         <div id="view-kasir" class="hidden h-full flex flex-col -m-3 lg:-m-8 p-3 lg:p-6 bg-slate-50">
-          <div class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden gap-4 pb-16 lg:pb-0">
+          <div class="flex-1 flex flex-col overflow-y-auto gap-4 pb-16">
             
-            <!-- Produk List di Kiri / Atas -->
-            <div class="flex-1 flex flex-col overflow-hidden min-h-[350px] lg:min-h-0">
-              <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-3 gap-2.5 shrink-0">
-                <div class="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-                  <button id="kasir-cat-semua" onclick="pilihKategoriKasir('semua')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow cursor-pointer shrink-0">Semua</button>
-                  <button id="kasir-cat-ikan" onclick="pilihKategoriKasir('ikan')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Ikan</button>
-                  <button id="kasir-cat-barang" onclick="pilihKategoriKasir('barang')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Barang</button>
-                  <button id="kasir-cat-mesin" onclick="pilihKategoriKasir('mesin')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Mesin</button>
-                  <button id="kasir-cat-aquarium" onclick="pilihKategoriKasir('aquarium')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Aquarium</button>
-                </div>
-                <div class="relative w-full sm:w-60">
-                  <input type="text" id="input-pencarian-kasir" oninput="renderKasirProduk()" onkeydown="handleSearchEnter(event)" placeholder="Cari produk..." class="bg-white border border-slate-200 rounded-2xl pl-3.5 pr-3.5 py-1.5 text-xs focus:outline-none focus:border-indigo-600 w-full shadow-sm">
-                </div>
+            <!-- TOMBOL KATEGORI & PENCARIAN -->
+            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2.5 shrink-0 bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+                <button id="kasir-cat-semua" onclick="pilihKategoriKasir('semua')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow cursor-pointer shrink-0">Semua</button>
+                <button id="kasir-cat-ikan" onclick="pilihKategoriKasir('ikan')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Ikan</button>
+                <button id="kasir-cat-barang" onclick="pilihKategoriKasir('barang')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Barang</button>
+                <button id="kasir-cat-mesin" onclick="pilihKategoriKasir('mesin')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Mesin</button>
+                <button id="kasir-cat-aquarium" onclick="pilihKategoriKasir('aquarium')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Aquarium</button>
               </div>
-              <div id="produk-grid-kasir" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 overflow-y-auto flex-1 pr-1 pb-2"></div>
+              <div class="relative w-full sm:w-60">
+                <input type="text" id="input-pencarian-kasir" oninput="renderKasirProduk()" onkeydown="handleSearchEnter(event)" placeholder="Cari produk..." class="bg-slate-50 border border-slate-200 rounded-xl pl-3.5 pr-3.5 py-1.5 text-xs focus:outline-none focus:border-indigo-600 w-full">
+              </div>
             </div>
 
-            <!-- Keranjang Pesanan di Sisi Kanan / Bawah (Diperkecil & Dibuat Pas di HP) -->
-            <div class="w-full lg:w-96 bg-white border border-slate-200/80 rounded-3xl p-3.5 lg:p-6 shrink-0 shadow-sm flex flex-col">
-              
+            <!-- KERANJANG PESANAN DI ATAS (Biar mudah dilihat tanpa scroll) -->
+            <div class="w-full bg-white border border-slate-200/80 rounded-3xl p-3.5 lg:p-6 shadow-sm flex flex-col shrink-0">
               <div class="flex justify-between items-center mb-2 border-b border-slate-100 pb-1.5 shrink-0">
-                <h3 class="font-bold text-slate-800 text-sm">Keranjang Pesanan</h3>
+                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">🛒 Keranjang Pesanan</h3>
                 <button onclick="kosongkanKeranjang()" class="text-[11px] text-rose-500 font-semibold hover:underline cursor-pointer">Kosongkan</button>
               </div>
 
-              <!-- Nama Pelanggan -->
-              <div class="mb-2 shrink-0">
-                <label class="text-[11px] font-semibold text-slate-600 block mb-0.5">Nama Pelanggan (Pembeli)</label>
-                <input type="text" id="nama-pelanggan" value="Umum" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-600 font-medium text-slate-800">
+              <!-- Nama Pelanggan & Tombol Tipe Harga -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2 shrink-0">
+                <div>
+                  <label class="text-[10px] font-semibold text-slate-500 block mb-0.5">Nama Pelanggan</label>
+                  <input type="text" id="nama-pelanggan" value="Umum" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1 text-xs focus:outline-none focus:border-indigo-600 font-medium text-slate-800">
+                </div>
+                <div>
+                  <label class="text-[10px] font-semibold text-slate-500 block mb-0.5">Mode Harga</label>
+                  <div class="flex gap-1 bg-slate-100 p-0.5 rounded-xl">
+                    <button id="btn-eceran" onclick="setTipePenjualan('eceran')" class="flex-1 py-1 rounded-lg font-semibold text-[11px] bg-indigo-600 text-white shadow cursor-pointer">Eceran</button>
+                    <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-[11px] text-slate-600 cursor-pointer">Grosir</button>
+                  </div>
+                </div>
               </div>
 
-              <!-- Mode Harga Eceran / Grosir -->
-              <div class="flex gap-1 bg-slate-100 p-1 rounded-xl mb-2 shrink-0">
-                <button id="btn-eceran" onclick="setTipePenjualan('eceran')" class="flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer">Eceran</button>
-                <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
+              <!-- Daftar Item Keranjang (Scrollable ukuran pas) -->
+              <div id="keranjang-list" class="space-y-2 max-h-[140px] overflow-y-auto my-1.5 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-1.5">
+                <p class="text-slate-400 text-center py-3 text-xs">Keranjang masih kosong</p>
               </div>
 
-              <!-- Daftar Item Keranjang (Scrollable Tersendiri agar tidak terlalu panjang di HP) -->
-              <div id="keranjang-list" class="space-y-2.5 max-h-[140px] lg:max-h-[220px] overflow-y-auto my-1.5 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-1.5">
-                <p class="text-slate-400 text-center py-4">Keranjang masih kosong</p>
-              </div>
-
-              <!-- Bagian Pembayaran di Bawah -->
+              <!-- Bagian Pembayaran di Bawah Keranjang -->
               <div class="space-y-2 pt-1 shrink-0 mt-auto">
                 <div class="flex justify-between items-center text-xs">
-                  <span class="text-slate-500 font-medium">Mode Harga</span>
+                  <span class="text-slate-500 font-medium">Kategori Harga Aktif:</span>
                   <span id="label-mode-harga" class="font-bold text-indigo-600 uppercase">ECERAN</span>
                 </div>
                 <div class="flex justify-between items-center">
                   <span class="text-xs font-bold text-slate-900">Total Tagihan</span>
                   <span class="font-black text-slate-900 text-base" id="total-harga">Rp 0</span>
                 </div>
-                <div>
-                  <label class="text-[10px] font-medium text-slate-600 block mb-0.5">Uang Tunai Diterima (Rp)</label>
-                  <input type="number" id="uang-tunai" oninput="hitungKembalian()" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-600 font-bold text-right text-slate-800" placeholder="Ketik nominal uang...">
-                </div>
-                <div class="flex justify-between items-center text-xs pt-0.5">
-                  <span class="text-slate-600 font-medium">Kembalian</span>
-                  <span id="label-kembalian" class="font-bold text-slate-600 text-xs">Rp 0</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label class="text-[10px] font-medium text-slate-600 block mb-0.5">Uang Tunai Diterima (Rp)</label>
+                    <input type="number" id="uang-tunai" oninput="hitungKembalian()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-600 font-bold text-right text-slate-800" placeholder="Ketik nominal...">
+                  </div>
+                  <div class="flex flex-col justify-end pb-1">
+                    <div class="flex justify-between items-center text-xs">
+                      <span class="text-slate-600 font-medium">Kembalian:</span>
+                      <span id="label-kembalian" class="font-bold text-slate-600 text-xs">Rp 0</span>
+                    </div>
+                  </div>
                 </div>
                 <button onclick="prosesBayar()" class="w-full bg-[#008f5a] hover:bg-[#007a4d] text-white font-bold py-3 rounded-2xl text-xs transition shadow-md cursor-pointer mt-1 uppercase tracking-wider">
                   Proses & Bayar Transaksi
                 </button>
               </div>
+            </div>
 
+            <!-- DAFTAR PRODUK DI BAWAH (Grid 2 Kolom di HP agar muat 2-3 produk per baris dan lebih kecil) -->
+            <div class="flex-1 flex flex-col">
+              <h3 class="font-bold text-slate-800 text-xs mb-2 px-1">Pilih Produk / Ikan</h3>
+              <div id="produk-grid-kasir" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5"></div>
             </div>
 
           </div>
