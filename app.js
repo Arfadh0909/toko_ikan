@@ -44,7 +44,6 @@ let kategoriAktifAdmin = 'ikan';
 onValue(ref(db, 'toko_ikan_stok/'), (snapshot) => {
   const data = snapshot.val();
   if (data) {
-    // Pastikan data berupa array dan memiliki ID unik
     dataStok = Array.isArray(data) ? data : Object.values(data);
     refreshTampilanAktif();
   } else {
@@ -458,8 +457,8 @@ function renderKeranjangDesktopHTML(container, totalEl) {
       <button id="btn-eceran" onclick="setTipePenjualan('eceran')" class="flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer">Eceran</button>
       <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
     </div>
-    <!-- List item di PC: Menggunakan flex-1 dan overflow agar tampil pas tanpa scroll berlebih -->
-    <div class="space-y-3 overflow-y-auto my-2 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2 flex-1 max-h-[calc(100vh-360px)]">
+    <!-- List item di PC: Tinggi diatur fleksibel agar langsung tampil tanpa scroll terpotong -->
+    <div class="space-y-3 overflow-y-auto my-1 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2 flex-1">
   `;
 
   if (keranjang.length === 0) {
@@ -745,7 +744,7 @@ function renderTabelAdmin() {
 
 function simpanProdukAdmin(e) {
   e.preventDefault();
-  const editIndex = document.getElementById('edit-id').value;
+  const editIndex = document.getElementById('edit-index').value;
   const nama = document.getElementById('nama-produk').value;
   const stok = parseInt(document.getElementById('stok-produk').value) || 0;
 
@@ -792,7 +791,7 @@ function editProduk(index) {
   const item = dataStok[index];
   if (!item) return;
 
-  document.getElementById('edit-id').value = index;
+  document.getElementById('edit-index').value = index;
   document.getElementById('nama-produk').value = item.nama;
   document.getElementById('stok-produk').value = item.stok;
 
@@ -816,8 +815,8 @@ function editProduk(index) {
 function resetFormAdmin() {
   const form = document.getElementById('form-tambah-produk');
   if(form) form.reset();
-  const editId = document.getElementById('edit-id');
-  if(editId) editId.value = "";
+  const editIndex = document.getElementById('edit-index');
+  if(editIndex) editIndex.value = "";
   const formTitle = document.getElementById('form-title');
   if(formTitle) formTitle.innerText = "Tambah Produk Baru";
   const btnSubmit = document.getElementById('btn-submit-form');
