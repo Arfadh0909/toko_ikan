@@ -132,7 +132,7 @@
 
         <!-- VIEW 2: KASIR / POS -->
         <div id="view-kasir" class="hidden h-full flex flex-col -m-3 lg:-m-8 p-3 lg:p-6 bg-slate-50">
-          <div class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden gap-4 pb-16 lg:pb-0 relative">
+          <div class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-visible gap-4 pb-16 lg:pb-0 relative">
             
             <!-- TOMBOL IKON KERANJANG MELAYANG KHUSUS HP -->
             <button onclick="bukaModalKeranjangHP()" class="lg:hidden fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-full shadow-2xl z-40 flex items-center justify-center gap-2 cursor-pointer transition transform active:scale-95">
@@ -159,7 +159,7 @@
               <div id="produk-grid-kasir" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 overflow-y-auto flex-1 pr-1 pb-4"></div>
             </div>
 
-            <!-- KANAN / LAPTOP/PC: Panel Keranjang Statis TANPA SCROLL -->
+            <!-- KANAN / LAPTOP/PC: Panel Keranjang Statis TANPA SCROLL & TAMPIL PENUH -->
             <div id="panel-keranjang-desktop" class="hidden lg:flex w-96 bg-white border border-slate-200/80 rounded-3xl p-5 shrink-0 shadow-sm flex-col">
               <!-- Render otomatis lewat updateKeranjangUI() -->
             </div>

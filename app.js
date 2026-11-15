@@ -457,7 +457,7 @@ function renderKeranjangDesktopHTML(container, totalEl) {
       <button id="btn-eceran" onclick="setTipePenjualan('eceran')" class="flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer">Eceran</button>
       <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
     </div>
-    <!-- List item di PC: Tanpa scroll berlebih, tampil langsung pas otomatis -->
+    <!-- List item di PC: Tampil pas dan rapi tanpa scroll berlebih -->
     <div class="space-y-3 my-1 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2">
   `;
 
