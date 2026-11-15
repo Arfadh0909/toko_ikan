@@ -306,7 +306,7 @@ function setTipePenjualan(tipe) {
   });
 
   keranjang.forEach(item => {
-    const prod = dataStok[item.indexStok];
+    const prod = dataStok.find(p => p.id === item.id);
     if (prod) item.harga = tipe === 'eceran' ? prod.hargaEceran : prod.hargaGrosir;
   });
 
@@ -322,7 +322,7 @@ function renderKasirProduk() {
   const keyword = inputSearch ? inputSearch.value.toLowerCase().trim() : '';
   container.innerHTML = '';
 
-  dataStok.forEach((item, index) => {
+  dataStok.forEach((item) => {
     const matchKat = keyword !== '' ? true : (kategoriAktifKasir === 'semua' || item.kategori === kategoriAktifKasir);
     const matchSearch = item.nama.toLowerCase().includes(keyword);
 
@@ -339,7 +339,7 @@ function renderKasirProduk() {
           </div>
           <div class="mt-3 flex justify-between items-end">
             <span class="text-indigo-600 font-bold text-xs">Rp ${hargaAktif.toLocaleString('id-ID')}</span>
-            <button onclick="tambahKeKeranjang(${index})" class="bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white w-7 h-7 rounded-xl flex items-center justify-center font-bold text-sm transition shadow-sm cursor-pointer">+</button>
+            <button onclick="tambahKeKeranjang(${item.id})" class="bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white w-7 h-7 rounded-xl flex items-center justify-center font-bold text-sm transition shadow-sm cursor-pointer">+</button>
           </div>
         </div>
       `;
@@ -358,8 +358,8 @@ function handleSearchEnter(e) {
   }
 }
 
-function tambahKeKeranjang(indexStok) {
-  const produk = dataStok[indexStok];
+function tambahKeKeranjang(id) {
+  const produk = dataStok.find(p => p.id === id);
   if (!produk) return;
 
   if (produk.stok <= 0) {
@@ -368,7 +368,7 @@ function tambahKeKeranjang(indexStok) {
   }
 
   const hargaAktif = tipePenjualan === 'eceran' ? produk.hargaEceran : produk.hargaGrosir;
-  const itemExist = keranjang.find(k => k.indexStok === indexStok);
+  const itemExist = keranjang.find(k => k.id === id);
 
   if (itemExist) {
     if (itemExist.qty + 1 <= produk.stok) {
@@ -379,7 +379,7 @@ function tambahKeKeranjang(indexStok) {
     }
   } else {
     keranjang.push({ 
-      indexStok: indexStok, 
+      id: produk.id, 
       kategori: produk.kategori, 
       nama: produk.nama, 
       harga: hargaAktif, 
@@ -457,8 +457,8 @@ function renderKeranjangDesktopHTML(container, totalEl) {
       <button id="btn-eceran" onclick="setTipePenjualan('eceran')" class="flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer">Eceran</button>
       <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
     </div>
-    <!-- List item di PC: Tinggi diatur fleksibel agar langsung tampil tanpa scroll terpotong -->
-    <div class="space-y-3 overflow-y-auto my-1 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2 flex-1">
+    <!-- List item di PC: Tanpa scroll berlebih, tampil langsung pas otomatis -->
+    <div class="space-y-3 my-1 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2">
   `;
 
   if (keranjang.length === 0) {
@@ -589,7 +589,7 @@ function prosesBayar() {
   }
   
   keranjang.forEach(kItem => {
-    const p = dataStok[kItem.indexStok];
+    const p = dataStok.find(item => item.id === kItem.id);
     if (p) p.stok -= kItem.qty;
   });
   simpanStorage();
@@ -714,7 +714,7 @@ function renderTabelAdmin() {
   const keyword = inputSearch ? inputSearch.value.toLowerCase() : '';
   container.innerHTML = '';
 
-  dataStok.forEach((item, index) => {
+  dataStok.forEach((item) => {
     const matchKat = item.kategori === kategoriAktifAdmin;
     const matchSearch = item.nama.toLowerCase().includes(keyword);
 
@@ -729,8 +729,8 @@ function renderTabelAdmin() {
           <td class="p-3">Rp ${item.hargaGrosir.toLocaleString('id-ID')}</td>
           <td class="p-3"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold">${item.stok}</span></td>
           <td class="p-3 text-center space-x-2">
-            <button onclick="editProduk(${index})" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Edit</button>
-            <button onclick="hapusProduk(${index})" class="bg-red-50 text-red-600 hover:bg-red-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Hapus</button>
+            <button onclick="editProduk(${item.id})" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Edit</button>
+            <button onclick="hapusProduk(${item.id})" class="bg-red-50 text-red-600 hover:bg-red-100 px-2.5 py-1 rounded-lg font-semibold cursor-pointer">Hapus</button>
           </td>
         </tr>
       `;
@@ -744,7 +744,7 @@ function renderTabelAdmin() {
 
 function simpanProdukAdmin(e) {
   e.preventDefault();
-  const editIndex = document.getElementById('edit-index').value;
+  const editId = document.getElementById('edit-id').value;
   const nama = document.getElementById('nama-produk').value;
   const stok = parseInt(document.getElementById('stok-produk').value) || 0;
 
@@ -765,12 +765,13 @@ function simpanProdukAdmin(e) {
     hargaGrosir = parseInt(document.getElementById('harga-grosir').value) || 0;
   }
 
-  if (editIndex === "") {
-    dataStok.push({ kategori, nama, hargaEceran, hargaGrosir, stok, ukuran });
+  if (editId === "") {
+    const newId = Date.now();
+    dataStok.push({ id: newId, kategori, nama, hargaEceran, hargaGrosir, stok, ukuran });
     alert('Produk berhasil ditambahkan!');
   } else {
-    const idx = parseInt(editIndex);
-    if (!isNaN(idx) && dataStok[idx]) {
+    const idx = dataStok.findIndex(p => p.id == editId);
+    if (idx !== -1) {
       dataStok[idx].kategori = kategori;
       dataStok[idx].nama = nama;
       dataStok[idx].hargaEceran = hargaEceran;
@@ -787,11 +788,11 @@ function simpanProdukAdmin(e) {
   renderDashboardStats();
 }
 
-function editProduk(index) {
-  const item = dataStok[index];
+function editProduk(id) {
+  const item = dataStok.find(p => p.id === id);
   if (!item) return;
 
-  document.getElementById('edit-index').value = index;
+  document.getElementById('edit-id').value = item.id;
   document.getElementById('nama-produk').value = item.nama;
   document.getElementById('stok-produk').value = item.stok;
 
@@ -815,8 +816,8 @@ function editProduk(index) {
 function resetFormAdmin() {
   const form = document.getElementById('form-tambah-produk');
   if(form) form.reset();
-  const editIndex = document.getElementById('edit-index');
-  if(editIndex) editIndex.value = "";
+  const editId = document.getElementById('edit-id');
+  if(editId) editId.value = "";
   const formTitle = document.getElementById('form-title');
   if(formTitle) formTitle.innerText = "Tambah Produk Baru";
   const btnSubmit = document.getElementById('btn-submit-form');
@@ -825,9 +826,9 @@ function resetFormAdmin() {
   if(btnCancel) btnCancel.classList.add('hidden');
 }
 
-function hapusProduk(index) {
+function hapusProduk(id) {
   if (confirm('Yakin ingin menghapus produk ini?')) {
-    dataStok.splice(index, 1);
+    dataStok = dataStok.filter(item => item.id !== id);
     simpanStorage();
     renderTabelAdmin();
     renderDashboardStats();
