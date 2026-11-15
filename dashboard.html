@@ -11,39 +11,39 @@
   <div class="flex flex-col lg:flex-row min-h-screen w-screen">
     
     <!-- SIDEBAR -->
-    <aside class="w-full lg:w-20 bg-[#0f172a] flex lg:flex-col items-center justify-between p-4 lg:py-6 shrink-0 select-none z-30 shadow-xl">
-      <div class="flex lg:flex-col items-center gap-4 lg:gap-6">
-        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg font-bold text-base lg:text-lg">
+    <aside class="w-full lg:w-20 bg-[#0f172a] flex lg:flex-col items-center justify-between p-3 lg:py-6 shrink-0 select-none z-30 shadow-xl">
+      <div class="flex lg:flex-col items-center gap-3 lg:gap-6">
+        <div class="w-9 h-9 lg:w-12 lg:h-12 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg font-bold text-base lg:text-lg">
           🐠
         </div>
 
         <nav class="flex lg:flex-col gap-2 lg:gap-3 overflow-x-auto lg:overflow-visible">
-          <button onclick="pilihMenu('dashboard')" id="menu-btn-dashboard" class="menu-btn w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-white bg-indigo-600 shadow-lg shadow-indigo-600/30 transition cursor-pointer relative group" title="Dashboard & Keuangan">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <button onclick="pilihMenu('dashboard')" id="menu-btn-dashboard" class="menu-btn w-9 h-9 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-white bg-indigo-600 shadow-lg shadow-indigo-600/30 transition cursor-pointer relative group" title="Dashboard & Keuangan">
+            <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
           </button>
 
-          <button onclick="pilihMenu('kasir')" id="menu-btn-kasir" class="menu-btn w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Kasir / POS">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <button onclick="pilihMenu('kasir')" id="menu-btn-kasir" class="menu-btn w-9 h-9 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Kasir / POS">
+            <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
           </button>
 
-          <button onclick="pilihMenu('ikan')" id="menu-btn-ikan" class="menu-btn w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Stok Ikan">
-            <span class="text-base lg:text-lg">🐠</span>
+          <button onclick="pilihMenu('ikan')" id="menu-btn-ikan" class="menu-btn w-9 h-9 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Stok Ikan">
+            <span class="text-sm lg:text-lg">🐠</span>
           </button>
 
-          <button onclick="pilihMenu('barang')" id="menu-btn-barang" class="menu-btn w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Stok Barang">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          <button onclick="pilihMenu('barang')" id="menu-btn-barang" class="menu-btn w-9 h-9 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Stok Barang">
+            <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
           </button>
 
-          <button onclick="pilihMenu('mesin')" id="menu-btn-mesin" class="menu-btn w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Stok Mesin">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/></svg>
+          <button onclick="pilihMenu('mesin')" id="menu-btn-mesin" class="menu-btn w-9 h-9 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Stok Mesin">
+            <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/></svg>
           </button>
 
-          <button onclick="pilihMenu('aquarium')" id="menu-btn-aquarium" class="menu-btn w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Stok Aquarium">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <button onclick="pilihMenu('aquarium')" id="menu-btn-aquarium" class="menu-btn w-9 h-9 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Stok Aquarium">
+            <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
           </button>
 
-          <button onclick="pilihMenu('riwayat')" id="menu-btn-riwayat" class="menu-btn w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Riwayat Transaksi">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <button onclick="pilihMenu('riwayat')" id="menu-btn-riwayat" class="menu-btn w-9 h-9 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group" title="Riwayat Transaksi">
+            <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           </button>
         </nav>
       </div>
@@ -59,21 +59,21 @@
     <main class="flex-1 flex flex-col h-screen overflow-hidden bg-[#f8fafc]">
       
       <!-- Top Header -->
-      <header class="bg-white border-b border-slate-200 px-4 lg:px-8 py-4 flex justify-between items-center shrink-0 z-20">
+      <header class="bg-white border-b border-slate-200 px-4 lg:px-8 py-3.5 flex justify-between items-center shrink-0 z-20">
         <div>
           <p class="text-[10px] lg:text-[11px] text-slate-400 font-semibold uppercase tracking-wider truncate max-w-[200px] lg:max-w-none">Petshop & Aquarium 99 / <span id="header-breadcrumb" class="text-slate-800">DASHBOARD & KEUANGAN</span></p>
         </div>
         <div class="flex items-center gap-3">
-          <div class="bg-slate-100 px-3 lg:px-4 py-1.5 lg:py-2 rounded-full text-[11px] lg:text-xs font-bold text-slate-700 flex items-center gap-2 border border-slate-200 shadow-sm">
+          <div class="bg-slate-100 px-3 py-1.5 rounded-full text-[11px] font-bold text-slate-700 flex items-center gap-2 border border-slate-200 shadow-sm">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span class="hidden sm:inline">Owner / Kasir Aktif</span><span class="sm:hidden">Aktif</span>
+            <span>Aktif</span>
           </div>
-          <button onclick="logout()" class="lg:hidden bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-xl text-xs font-bold transition">Logout</button>
+          <button onclick="logout()" class="lg:hidden bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-xl text-xs font-bold transition">Logout</button>
         </div>
       </header>
 
       <!-- CONTAINER KONTEN -->
-      <div class="flex-1 overflow-y-auto p-4 lg:p-8 relative">
+      <div class="flex-1 overflow-y-auto p-3 lg:p-8 relative">
         
         <!-- VIEW 1: DASHBOARD & KEUANGAN -->
         <div id="view-dashboard" class="space-y-6">
@@ -130,38 +130,38 @@
           </div>
         </div>
 
-        <!-- VIEW 2: KASIR / POS -->
-        <div id="view-kasir" class="hidden h-full flex flex-col -m-4 lg:-m-8 p-4 lg:p-6 bg-slate-50">
-          <div class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden gap-6 pb-20 lg:pb-0">
+        <!-- VIEW 2: KASIR / POS (Dibuat Ringkas, Padat, & Nyaman di HP) -->
+        <div id="view-kasir" class="hidden h-full flex flex-col -m-3 lg:-m-8 p-3 lg:p-6 bg-slate-50">
+          <div class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden gap-4 pb-16 lg:pb-0">
             
             <!-- Produk List di Kiri / Atas -->
-            <div class="flex-1 flex flex-col overflow-hidden min-h-[400px] lg:min-h-0">
-              <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-4 gap-3 shrink-0">
-                <div class="flex gap-1.5 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
-                  <button id="kasir-cat-semua" onclick="pilihKategoriKasir('semua')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow cursor-pointer shrink-0">Semua</button>
-                  <button id="kasir-cat-ikan" onclick="pilihKategoriKasir('ikan')" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Ikan</button>
-                  <button id="kasir-cat-barang" onclick="pilihKategoriKasir('barang')" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Barang</button>
-                  <button id="kasir-cat-mesin" onclick="pilihKategoriKasir('mesin')" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Mesin</button>
-                  <button id="kasir-cat-aquarium" onclick="pilihKategoriKasir('aquarium')" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Aquarium</button>
+            <div class="flex-1 flex flex-col overflow-hidden min-h-[350px] lg:min-h-0">
+              <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-3 gap-2.5 shrink-0">
+                <div class="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+                  <button id="kasir-cat-semua" onclick="pilihKategoriKasir('semua')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow cursor-pointer shrink-0">Semua</button>
+                  <button id="kasir-cat-ikan" onclick="pilihKategoriKasir('ikan')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Ikan</button>
+                  <button id="kasir-cat-barang" onclick="pilihKategoriKasir('barang')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Barang</button>
+                  <button id="kasir-cat-mesin" onclick="pilihKategoriKasir('mesin')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Mesin</button>
+                  <button id="kasir-cat-aquarium" onclick="pilihKategoriKasir('aquarium')" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0">Aquarium</button>
                 </div>
-                <div class="relative w-full sm:w-64">
-                  <input type="text" id="input-pencarian-kasir" oninput="renderKasirProduk()" onkeydown="handleSearchEnter(event)" placeholder="Cari produk..." class="bg-white border border-slate-200 rounded-2xl pl-4 pr-4 py-2 text-xs focus:outline-none focus:border-indigo-600 w-full shadow-sm">
+                <div class="relative w-full sm:w-60">
+                  <input type="text" id="input-pencarian-kasir" oninput="renderKasirProduk()" onkeydown="handleSearchEnter(event)" placeholder="Cari produk..." class="bg-white border border-slate-200 rounded-2xl pl-3.5 pr-3.5 py-1.5 text-xs focus:outline-none focus:border-indigo-600 w-full shadow-sm">
                 </div>
               </div>
-              <div id="produk-grid-kasir" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto flex-1 pr-1 pb-4"></div>
+              <div id="produk-grid-kasir" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 overflow-y-auto flex-1 pr-1 pb-2"></div>
             </div>
 
-            <!-- Keranjang Pesanan di Sisi Kanan / Bawah (Dibuat Scroll Terpisah agar Tombol Bayar Langsung Terlihat) -->
-            <div class="w-full lg:w-96 bg-white border border-slate-200/80 rounded-3xl p-4 lg:p-6 shrink-0 shadow-sm flex flex-col">
+            <!-- Keranjang Pesanan di Sisi Kanan / Bawah (Diperkecil & Dibuat Pas di HP) -->
+            <div class="w-full lg:w-96 bg-white border border-slate-200/80 rounded-3xl p-3.5 lg:p-6 shrink-0 shadow-sm flex flex-col">
               
-              <div class="flex justify-between items-center mb-2 border-b border-slate-100 pb-2 shrink-0">
-                <h3 class="font-bold text-slate-800 text-base">Keranjang Pesanan</h3>
-                <button onclick="kosongkanKeranjang()" class="text-xs text-rose-500 font-semibold hover:underline cursor-pointer">Kosongkan</button>
+              <div class="flex justify-between items-center mb-2 border-b border-slate-100 pb-1.5 shrink-0">
+                <h3 class="font-bold text-slate-800 text-sm">Keranjang Pesanan</h3>
+                <button onclick="kosongkanKeranjang()" class="text-[11px] text-rose-500 font-semibold hover:underline cursor-pointer">Kosongkan</button>
               </div>
 
               <!-- Nama Pelanggan -->
               <div class="mb-2 shrink-0">
-                <label class="text-xs font-semibold text-slate-600 block mb-1">Nama Pelanggan (Pembeli)</label>
+                <label class="text-[11px] font-semibold text-slate-600 block mb-0.5">Nama Pelanggan (Pembeli)</label>
                 <input type="text" id="nama-pelanggan" value="Umum" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-600 font-medium text-slate-800">
               </div>
 
@@ -171,23 +171,23 @@
                 <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
               </div>
 
-              <!-- Daftar Item Keranjang (Scrollable Tersendiri dengan Tinggi Maksimal yang Pas di HP) -->
-              <div id="keranjang-list" class="space-y-3 max-h-[180px] lg:max-h-[220px] overflow-y-auto my-2 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2">
-                <p class="text-slate-400 text-center py-6">Keranjang masih kosong</p>
+              <!-- Daftar Item Keranjang (Scrollable Tersendiri agar tidak terlalu panjang di HP) -->
+              <div id="keranjang-list" class="space-y-2.5 max-h-[140px] lg:max-h-[220px] overflow-y-auto my-1.5 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-1.5">
+                <p class="text-slate-400 text-center py-4">Keranjang masih kosong</p>
               </div>
 
-              <!-- Bagian Pembayaran di Bawah (Selalu nampak tanpa perlu scroll jauh) -->
+              <!-- Bagian Pembayaran di Bawah -->
               <div class="space-y-2 pt-1 shrink-0 mt-auto">
-                <div class="flex justify-between items-center">
-                  <span class="text-xs text-slate-500 font-medium">Mode Harga</span>
-                  <span id="label-mode-harga" class="text-xs font-bold text-indigo-600 uppercase">ECERAN</span>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-500 font-medium">Mode Harga</span>
+                  <span id="label-mode-harga" class="font-bold text-indigo-600 uppercase">ECERAN</span>
                 </div>
                 <div class="flex justify-between items-center">
                   <span class="text-xs font-bold text-slate-900">Total Tagihan</span>
                   <span class="font-black text-slate-900 text-base" id="total-harga">Rp 0</span>
                 </div>
                 <div>
-                  <label class="text-[11px] font-medium text-slate-600 block mb-0.5">Uang Tunai Diterima (Rp)</label>
+                  <label class="text-[10px] font-medium text-slate-600 block mb-0.5">Uang Tunai Diterima (Rp)</label>
                   <input type="number" id="uang-tunai" oninput="hitungKembalian()" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-600 font-bold text-right text-slate-800" placeholder="Ketik nominal uang...">
                 </div>
                 <div class="flex justify-between items-center text-xs pt-0.5">
@@ -428,7 +428,6 @@
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       checkAuth();
-      // Saat pertama kali masuk, arahkan ke kasir atau gunakan history state yang tepat
       const savedMenu = window.location.hash ? window.location.hash.substring(1) : 'kasir';
       pilihMenu(savedMenu, false);
     });
