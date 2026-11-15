@@ -116,7 +116,7 @@ function logout() {
 }
 
 // ==========================================
-// 4. NAVIGASI MENU SIDEBAR & PENGATURAN TOMBOL KEMBALI HP
+// 4. NAVIGASI MENU SIDEBAR & TOMBOL KEMBALI HP
 // ==========================================
 function pilihMenu(menu, pushHistory = true) {
   ['view-dashboard', 'view-kasir', 'view-stok', 'view-riwayat'].forEach(id => {
@@ -125,19 +125,18 @@ function pilihMenu(menu, pushHistory = true) {
   });
 
   document.querySelectorAll('.menu-btn').forEach(btn => {
-    btn.className = "menu-btn w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group";
+    btn.className = "menu-btn w-9 h-9 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer relative group";
   });
 
   const activeBtn = document.getElementById('menu-btn-' + menu);
   if(activeBtn) {
-    activeBtn.className = "menu-btn w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-white bg-indigo-600 shadow-lg shadow-indigo-600/30 transition cursor-pointer relative group";
+    activeBtn.className = "menu-btn w-9 h-9 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center text-white bg-indigo-600 shadow-lg shadow-indigo-600/30 transition cursor-pointer relative group";
   }
 
   if (typeof resetFormAdmin === 'function') resetFormAdmin();
 
   const breadcrumb = document.getElementById('header-breadcrumb');
 
-  // Merekam riwayat navigasi agar tombol kembali HP mengarah ke Kasir terlebih dahulu
   if (pushHistory && window.history && window.history.pushState) {
     window.history.pushState({ activeMenu: menu }, "", `#${menu}`);
   }
@@ -177,7 +176,6 @@ function pilihMenu(menu, pushHistory = true) {
   }
 }
 
-// Menangani tombol kembali (back) di HP agar kembali ke Kasir secara mulus
 window.addEventListener('popstate', (event) => {
   if (event.state && event.state.activeMenu) {
     pilihMenu(event.state.activeMenu, false);
@@ -273,7 +271,7 @@ function bukaModalModal() { document.getElementById('modal-catat-modal').classLi
 function tutupModalModal() { document.getElementById('modal-catat-modal').classList.add('hidden'); }
 
 // ==========================================
-// 6. LOGIKA HALAMAN KASIR & KERANJANG
+// 6. KASIR & KERANJANG
 // ==========================================
 function pilihKategoriKasir(kategori) {
   kategoriAktifKasir = kategori;
@@ -281,8 +279,8 @@ function pilihKategoriKasir(kategori) {
     const btn = document.getElementById('kasir-cat-' + kat);
     if(btn) {
       btn.className = kat === kategori 
-        ? "px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow cursor-pointer shrink-0"
-        : "px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0";
+        ? "px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow cursor-pointer shrink-0"
+        : "px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer shrink-0";
     }
   });
   renderKasirProduk();
@@ -290,20 +288,24 @@ function pilihKategoriKasir(kategori) {
 
 function setTipePenjualan(tipe) {
   tipePenjualan = tipe;
-  const btnE = document.getElementById('btn-eceran');
-  const btnG = document.getElementById('btn-grosir');
-  const labelMode = document.getElementById('label-mode-harga');
-
-  if (tipe === 'eceran') {
-    if(btnE) btnE.className = "flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer";
-    if(btnG) btnG.className = "flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer";
-    if(labelMode) labelMode.innerText = "ECERAN";
-  } else {
-    if(btnG) btnG.className = "flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer";
-    if(btnE) btnE.className = "flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer";
-    if(labelMode) labelMode.innerText = "GROSIR";
-  }
   
+  // Sinkronisasi tombol eceran/grosir di desktop & HP
+  ['', '-hp'].forEach(sufiks => {
+    const btnE = document.getElementById('btn-eceran' + sufiks);
+    const btnG = document.getElementById('btn-grosir' + sufiks);
+    const labelMode = document.getElementById('label-mode-harga' + sufiks);
+
+    if (tipe === 'eceran') {
+      if(btnE) btnE.className = "flex-1 py-1.5 rounded-lg font-semibold text-[11px] bg-indigo-600 text-white shadow cursor-pointer";
+      if(btnG) btnG.className = "flex-1 py-1.5 rounded-lg font-semibold text-[11px] text-slate-600 cursor-pointer";
+      if(labelMode) labelMode.innerText = "ECERAN";
+    } else {
+      if(btnG) btnG.className = "flex-1 py-1.5 rounded-lg font-semibold text-[11px] bg-indigo-600 text-white shadow cursor-pointer";
+      if(btnE) btnE.className = "flex-1 py-1.5 rounded-lg font-semibold text-[11px] text-slate-600 cursor-pointer";
+      if(labelMode) labelMode.innerText = "GROSIR";
+    }
+  });
+
   keranjang.forEach(item => {
     const prod = dataStok.find(p => p.id === item.id);
     if (prod) item.harga = tipe === 'eceran' ? prod.hargaEceran : prod.hargaGrosir;
@@ -335,18 +337,17 @@ function renderKasirProduk() {
   filtered.forEach(item => {
     const hargaAktif = tipePenjualan === 'eceran' ? item.hargaEceran : item.hargaGrosir;
     container.innerHTML += `
-      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 flex flex-col justify-between hover:shadow-md transition relative group">
+      <div class="bg-white border border-slate-200/80 rounded-2xl p-3 flex flex-col justify-between hover:shadow-md transition relative group">
         <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg uppercase tracking-wider">${item.kategori}</span>
-            <span class="text-[10px] text-slate-400 font-medium">Stok: ${item.stok}</span>
+          <div class="flex justify-between items-start mb-2">
+            <span class="text-[9px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase tracking-wider">${item.kategori}</span>
+            <span class="text-[9px] text-slate-400 font-medium">Stok: ${item.stok}</span>
           </div>
-          <h4 class="font-bold text-slate-800 text-xs group-hover:text-indigo-600 transition mb-1">${item.nama}</h4>
-          ${item.kategori === 'aquarium' && item.ukuran ? `<p class="text-[10px] text-purple-600 font-semibold">${item.ukuran.p}x${item.ukuran.l}x${item.ukuran.t} cm</p>` : ''}
+          <h4 class="font-bold text-slate-800 text-xs group-hover:text-indigo-600 transition mb-1 line-clamp-2">${item.nama}</h4>
         </div>
-        <div class="mt-4 flex justify-between items-end">
-          <span class="text-indigo-600 font-bold text-sm">Rp ${hargaAktif.toLocaleString('id-ID')}</span>
-          <button onclick="tambahKeKeranjang(${item.id})" class="bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm transition shadow-sm cursor-pointer">+</button>
+        <div class="mt-3 flex justify-between items-end">
+          <span class="text-indigo-600 font-bold text-xs">Rp ${hargaAktif.toLocaleString('id-ID')}</span>
+          <button onclick="tambahKeKeranjang(${item.id})" class="bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white w-7 h-7 rounded-xl flex items-center justify-center font-bold text-sm transition shadow-sm cursor-pointer">+</button>
         </div>
       </div>
     `;
@@ -424,88 +425,172 @@ function kosongkanKeranjang() {
 }
 
 function updateKeranjangUI() {
-  const container = document.getElementById('keranjang-list');
-  const totalEl = document.getElementById('total-harga');
-  if (!container) return;
+  // Update badge jumlah item di tombol melayang HP
+  const badge = document.getElementById('badge-total-item');
+  const totalItemCount = keranjang.reduce((sum, item) => sum + item.qty, 0);
+  if (badge) badge.innerText = totalItemCount;
 
-  container.innerHTML = '';
-  let total = 0;
+  // Render untuk Container Desktop & HP
+  ['', '-hp'].forEach(sufiks => {
+    const container = document.getElementById(sufiks === '' ? 'panel-keranjang-desktop' : 'keranjang-list-hp');
+    const totalEl = document.getElementById(sufiks === '' ? 'total-harga' : 'total-harga-hp');
+    
+    // Jika container desktop tersembunyi (di HP), lewati rendering desktop
+    if (sufiks === '' && (!container || container.classList.contains('hidden'))) return;
+    if (!container && sufiks === '-hp') return;
 
-  if (keranjang.length === 0) {
-    container.innerHTML = '<p class="text-slate-400 text-center py-6">Keranjang masih kosong</p>';
-    if(totalEl) totalEl.innerText = "Rp 0";
-    hitungKembalian();
-    return;
-  }
-
-  keranjang.forEach((item, index) => {
-    const subtotal = item.harga * item.qty;
-    total += subtotal;
-    const katLabel = item.kategori ? item.kategori.charAt(0).toUpperCase() + item.kategori.slice(1) : 'Produk';
-    const badgeColor = item.kategori === 'aquarium' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-600';
-
-    container.innerHTML += `
-      <div class="pt-2 first:pt-0 pb-2 space-y-1.5">
-        <div class="flex justify-between items-center gap-2">
-          <div class="flex items-center gap-1.5">
-            <span class="${badgeColor} text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">${katLabel}</span>
-            <span class="font-bold text-slate-800 text-xs leading-snug">${item.nama}</span>
-          </div>
-          <button onclick="hapusItemKeranjang(${index})" class="text-rose-500 hover:text-rose-700 font-semibold text-[11px] cursor-pointer shrink-0">Hapus</button>
-        </div>
-        
-        <div class="flex items-center justify-between gap-2">
-          <div class="flex items-center gap-1">
-            <span class="text-[10px] text-slate-500">Qty:</span>
-            <input type="number" min="1" value="${item.qty}" onchange="updateQtyItem(${index}, this.value)" class="w-12 bg-white border border-slate-200 rounded px-1.5 py-0.5 font-bold text-center text-slate-800 text-xs focus:outline-none focus:border-indigo-600">
-          </div>
-          <div class="flex items-center gap-1">
-            <span class="text-[10px] text-slate-500">Harga:</span>
-            <input type="number" value="${item.harga}" onchange="updateHargaItem(${index}, this.value)" class="w-20 bg-white border border-slate-200 rounded px-1.5 py-0.5 font-bold text-center text-indigo-600 text-xs focus:outline-none focus:border-indigo-600">
-          </div>
-        </div>
-
-        <div class="text-right">
-          <span class="font-bold text-slate-900 text-xs">Rp ${subtotal.toLocaleString('id-ID')}</span>
-        </div>
-      </div>
-    `;
+    if (sufiks === '') {
+      // Struktur HTML keranjang lengkap untuk versi Desktop
+      renderKeranjangDesktopHTML(container, totalEl);
+    } else {
+      // Struktur HTML list item untuk versi Modal HP
+      renderKeranjangHPListHTML(container, totalEl);
+    }
   });
 
-  if(totalEl) totalEl.innerText = "Rp " + total.toLocaleString('id-ID');
   hitungKembalian();
+}
+
+function renderKeranjangDesktopHTML(container, totalEl) {
+  let total = 0;
+  let html = `
+    <div class="flex justify-between items-center mb-2 border-b border-slate-100 pb-2 shrink-0">
+      <h3 class="font-bold text-slate-800 text-base">Keranjang Pesanan</h3>
+      <button onclick="kosongkanKeranjang()" class="text-xs text-rose-500 font-semibold hover:underline cursor-pointer">Kosongkan</button>
+    </div>
+    <div class="mb-2 shrink-0">
+      <label class="text-xs font-semibold text-slate-600 block mb-1">Nama Pelanggan (Pembeli)</label>
+      <input type="text" id="nama-pelanggan" value="Umum" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-indigo-600 font-medium text-slate-800">
+    </div>
+    <div class="flex gap-1 bg-slate-100 p-1 rounded-xl mb-2 shrink-0">
+      <button id="btn-eceran" onclick="setTipePenjualan('eceran')" class="flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer">Eceran</button>
+      <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
+    </div>
+    <div class="space-y-3 max-h-[220px] overflow-y-auto my-2 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2 flex-1">
+  `;
+
+  if (keranjang.length === 0) {
+    html += '<p class="text-slate-400 text-center py-6">Keranjang masih kosong</p>';
+  } else {
+    keranjang.forEach((item, index) => {
+      const subtotal = item.harga * item.qty;
+      total += subtotal;
+      html += `
+        <div class="pt-2 first:pt-0 pb-2 space-y-1.5">
+          <div class="flex justify-between items-center gap-2">
+            <span class="font-bold text-slate-800 text-xs">${item.nama}</span>
+            <button onclick="hapusItemKeranjang(${index})" class="text-rose-500 font-semibold text-[11px] cursor-pointer">Hapus</button>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1">
+              <span class="text-[10px] text-slate-500">Qty:</span>
+              <input type="number" min="1" value="${item.qty}" onchange="updateQtyItem(${index}, this.value)" class="w-12 bg-white border border-slate-200 rounded px-1 py-0.5 font-bold text-center text-xs">
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="text-[10px] text-slate-500">Harga:</span>
+              <input type="number" value="${item.harga}" onchange="updateHargaItem(${index}, this.value)" class="w-20 bg-white border border-slate-200 rounded px-1 py-0.5 font-bold text-center text-indigo-600 text-xs">
+            </div>
+          </div>
+          <div class="text-right font-bold text-slate-900 text-xs">Rp ${subtotal.toLocaleString('id-ID')}</div>
+        </div>
+      `;
+    });
+  }
+
+  html += `
+    </div>
+    <div class="space-y-2 pt-1 shrink-0 mt-auto">
+      <div class="flex justify-between items-center"><span class="text-xs text-slate-500">Mode Harga</span><span id="label-mode-harga" class="text-xs font-bold text-indigo-600 uppercase">ECERAN</span></div>
+      <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-900">Total Tagihan</span><span class="font-black text-slate-900 text-base" id="total-harga">Rp ${total.toLocaleString('id-ID')}</span></div>
+      <div><label class="text-[11px] font-medium text-slate-600 block mb-0.5">Uang Tunai (Rp)</label><input type="number" id="uang-tunai" oninput="hitungKembalian()" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-right text-slate-800" placeholder="Ketik nominal..."></div>
+      <div class="flex justify-between items-center text-xs"><span class="text-slate-600">Kembalian</span><span id="label-kembalian" class="font-bold text-slate-600 text-xs">Rp 0</span></div>
+      <button onclick="prosesBayar()" class="w-full bg-[#008f5a] hover:bg-[#007a4d] text-white font-bold py-3 rounded-2xl text-xs transition cursor-pointer mt-1 uppercase">Proses & Bayar</button>
+    </div>
+  `;
+  container.innerHTML = html;
+  if(totalEl) totalEl.innerText = "Rp " + total.toLocaleString('id-ID');
+}
+
+function renderKeranjangHPListHTML(container, totalEl) {
+  let total = 0;
+  container.innerHTML = '';
+
+  if (keranjang.length === 0) {
+    container.innerHTML = '<p class="text-slate-400 text-center py-4 text-xs">Keranjang masih kosong</p>';
+  } else {
+    keranjang.forEach((item, index) => {
+      const subtotal = item.harga * item.qty;
+      total += subtotal;
+      container.innerHTML += `
+        <div class="pt-2 first:pt-0 pb-2 space-y-1.5">
+          <div class="flex justify-between items-center gap-2">
+            <span class="font-bold text-slate-800 text-xs">${item.nama}</span>
+            <button onclick="hapusItemKeranjang(${index})" class="text-rose-500 font-semibold text-[11px] cursor-pointer">Hapus</button>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1">
+              <span class="text-[10px] text-slate-500">Qty:</span>
+              <input type="number" min="1" value="${item.qty}" onchange="updateQtyItem(${index}, this.value)" class="w-12 bg-white border border-slate-200 rounded px-1 py-0.5 font-bold text-center text-xs">
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="text-[10px] text-slate-500">Harga:</span>
+              <input type="number" value="${item.harga}" onchange="updateHargaItem(${index}, this.value)" class="w-20 bg-white border border-slate-200 rounded px-1 py-0.5 font-bold text-center text-indigo-600 text-xs">
+            </div>
+          </div>
+          <div class="text-right font-bold text-slate-900 text-xs">Rp ${subtotal.toLocaleString('id-ID')}</div>
+        </div>
+      `;
+    });
+  }
+
+  if(totalEl) totalEl.innerText = "Rp " + total.toLocaleString('id-ID');
 }
 
 function hitungKembalian() {
   const total = keranjang.reduce((sum, item) => sum + (item.harga * item.qty), 0);
-  const uangTunaiInput = document.getElementById('uang-tunai');
-  const labelKembalian = document.getElementById('label-kembalian');
-  if (!uangTunaiInput || !labelKembalian) return;
+  
+  // Ambil input uang tunai dari desktop atau HP modal
+  const inputDesktop = document.getElementById('uang-tunai');
+  const inputHP = document.getElementById('uang-tunai-hp');
+  const uangTunaiVal = (inputHP && !inputHP.closest('#modal-keranjang-hp').classList.contains('hidden')) ? inputHP.value : (inputDesktop ? inputDesktop.value : '');
 
-  if (uangTunaiInput.value.trim() === "") {
-    labelKembalian.innerText = "Rp 0";
-    labelKembalian.className = "font-bold text-slate-600 text-xs";
-    return;
+  // Sinkronkan nilai input uang tunai antar keduanya
+  if (inputDesktop && inputHP) {
+    if (document.activeElement === inputDesktop) inputHP.value = inputDesktop.value;
+    if (document.activeElement === inputHP) inputDesktop.value = inputHP.value;
   }
 
-  const uangTunai = parseFloat(uangTunaiInput.value) || 0;
-  const selisih = uangTunai - total;
+  ['', '-hp'].forEach(sufiks => {
+    const labelKembalian = document.getElementById('label-kembalian' + sufiks);
+    if (!labelKembalian) return;
 
-  if (selisih >= 0) {
-    labelKembalian.innerText = "Rp " + selisih.toLocaleString('id-ID');
-    labelKembalian.className = "font-bold text-emerald-600 text-xs";
-  } else {
-    labelKembalian.innerText = "Kurang Rp " + Math.abs(selisih).toLocaleString('id-ID');
-    labelKembalian.className = "font-bold text-rose-600 text-xs";
-  }
+    if (uangTunaiVal.trim() === "") {
+      labelKembalian.innerText = "Rp 0";
+      labelKembalian.className = "font-bold text-slate-600 text-xs";
+      return;
+    }
+
+    const uangTunai = parseFloat(uangTunaiVal) || 0;
+    const selisih = uangTunai - total;
+
+    if (selisih >= 0) {
+      labelKembalian.innerText = "Rp " + selisih.toLocaleString('id-ID');
+      labelKembalian.className = "font-bold text-emerald-600 text-xs";
+    } else {
+      labelKembalian.innerText = "Kurang Rp " + Math.abs(selisih).toLocaleString('id-ID');
+      labelKembalian.className = "font-bold text-rose-600 text-xs";
+    }
+  });
 }
 
 function prosesBayar() {
   if (keranjang.length === 0) { alert('Keranjang masih kosong!'); return; }
 
   const total = keranjang.reduce((sum, item) => sum + (item.harga * item.qty), 0);
-  const uangTunaiInput = document.getElementById('uang-tunai').value.trim();
-  const uangTunai = uangTunaiInput === "" ? total : parseFloat(uangTunaiInput) || 0;
+  const inputDesktop = document.getElementById('uang-tunai');
+  const inputHP = document.getElementById('uang-tunai-hp');
+  const uangTunaiVal = inputHP && inputHP.value.trim() !== "" ? inputHP.value : (inputDesktop ? inputDesktop.value.trim() : "");
+  const uangTunai = uangTunaiVal === "" ? total : parseFloat(uangTunaiVal) || 0;
 
   if (uangTunai < total) {
     alert('Uang tunai kurang dari total tagihan!');
@@ -518,7 +603,9 @@ function prosesBayar() {
   });
   simpanStorage();
   
-  const namaPelanggan = document.getElementById('nama-pelanggan').value || 'Umum';
+  const namaPelangganInput = document.getElementById('nama-pelanggan-hp') || document.getElementById('nama-pelanggan');
+  const namaPelanggan = namaPelangganInput ? namaPelangganInput.value : 'Umum';
+
   const notaBaru = { 
     idNota: "N99-" + Date.now().toString().slice(-5), 
     tanggal: new Date().toLocaleString('id-ID'), 
@@ -534,11 +621,22 @@ function prosesBayar() {
   cetakNota(notaBaru);
   
   keranjang = [];
-  document.getElementById('uang-tunai').value = '';
-  document.getElementById('nama-pelanggan').value = 'Umum';
+  if(inputDesktop) inputDesktop.value = '';
+  if(inputHP) inputHP.value = '';
+  tutupModalKeranjangHP();
   updateKeranjangUI();
   renderKasirProduk();
   renderDashboardStats();
+}
+
+function bukaModalKeranjangHP() {
+  const modal = document.getElementById('modal-keranjang-hp');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function tutupModalKeranjangHP() {
+  const modal = document.getElementById('modal-keranjang-hp');
+  if (modal) modal.classList.add('hidden');
 }
 
 function cetakNota(nota) {
@@ -575,25 +673,18 @@ function cetakNota(nota) {
   }
   
   const receipt = document.getElementById('printable-receipt');
-  if(receipt) {
-    receipt.classList.remove('hidden');
-  }
+  if(receipt) receipt.classList.remove('hidden');
 }
 
 function tutupNota() {
   const receipt = document.getElementById('printable-receipt');
-  if(receipt) {
-    receipt.classList.add('hidden');
-  }
+  if(receipt) receipt.classList.add('hidden');
 }
 
 function lihatNotaRiwayat(idFirebase) {
   const trx = dataRiwayat.find(t => t.idFirebase === idFirebase);
-  if (trx) {
-    cetakNota(trx);
-  } else {
-    alert('Data nota tidak ditemukan.');
-  }
+  if (trx) cetakNota(trx);
+  else alert('Data nota tidak ditemukan.');
 }
 
 // ==========================================
@@ -812,6 +903,8 @@ window.hapusItemKeranjang = hapusItemKeranjang;
 window.kosongkanKeranjang = kosongkanKeranjang;
 window.hitungKembalian = hitungKembalian;
 window.prosesBayar = prosesBayar;
+window.bukaModalKeranjangHP = bukaModalKeranjangHP;
+window.tutupModalKeranjangHP = tutupModalKeranjangHP;
 window.tutupNota = tutupNota;
 window.lihatNotaRiwayat = lihatNotaRiwayat;
 window.handleSearchEnter = handleSearchEnter;
