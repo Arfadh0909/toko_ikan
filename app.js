@@ -27,11 +27,11 @@ const USERS = [
 ];
 
 let dataStok = [
-  { kategori: "ikan", nama: "Ikan Gurame Segar", hargaEceran: 45000, hargaGrosir: 38000, stok: 20 },
-  { kategori: "ikan", nama: "Ikan Nila Merah", hargaEceran: 32000, hargaGrosir: 27000, stok: 35 },
-  { kategori: "barang", nama: "Pakan Ikan Pelet 1kg", hargaEceran: 20000, hargaGrosir: 16500, stok: 50 },
-  { kategori: "mesin", nama: "Mesin Aerator Oksigen 1 Lubang", hargaEceran: 45000, hargaGrosir: 38000, stok: 15 },
-  { kategori: "aquarium", nama: "Aquarium Kaca Custom", ukuran: {p: 60, l: 30, t: 35}, hargaEceran: 150000, hargaGrosir: 130000, stok: 3 }
+  { id: 1, kategori: "ikan", nama: "Ikan Gurame Segar", hargaEceran: 45000, hargaGrosir: 38000, stok: 20 },
+  { id: 2, kategori: "ikan", nama: "Ikan Nila Merah", hargaEceran: 32000, hargaGrosir: 27000, stok: 35 },
+  { id: 3, kategori: "barang", nama: "Pakan Ikan Pelet 1kg", hargaEceran: 20000, hargaGrosir: 16500, stok: 50 },
+  { id: 4, kategori: "mesin", nama: "Mesin Aerator Oksigen 1 Lubang", hargaEceran: 45000, hargaGrosir: 38000, stok: 15 },
+  { id: 5, kategori: "aquarium", nama: "Aquarium Kaca Custom", ukuran: {p: 60, l: 30, t: 35}, hargaEceran: 150000, hargaGrosir: 130000, stok: 3 }
 ];
 
 let dataRiwayat = [];
@@ -44,7 +44,8 @@ let kategoriAktifAdmin = 'ikan';
 onValue(ref(db, 'toko_ikan_stok/'), (snapshot) => {
   const data = snapshot.val();
   if (data) {
-    dataStok = data;
+    // Pastikan data berupa array dan memiliki ID unik
+    dataStok = Array.isArray(data) ? data : Object.values(data);
     refreshTampilanAktif();
   } else {
     set(ref(db, 'toko_ikan_stok/'), dataStok);
@@ -457,7 +458,8 @@ function renderKeranjangDesktopHTML(container, totalEl) {
       <button id="btn-eceran" onclick="setTipePenjualan('eceran')" class="flex-1 py-1 rounded-lg font-semibold text-xs bg-indigo-600 text-white shadow cursor-pointer">Eceran</button>
       <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
     </div>
-    <div class="space-y-3 max-h-[220px] overflow-y-auto my-2 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2 flex-1">
+    <!-- List item di PC: Menggunakan flex-1 dan overflow agar tampil pas tanpa scroll berlebih -->
+    <div class="space-y-3 overflow-y-auto my-2 text-xs divide-y divide-slate-100 pr-1 border-y border-slate-100 py-2 flex-1 max-h-[calc(100vh-360px)]">
   `;
 
   if (keranjang.length === 0) {
