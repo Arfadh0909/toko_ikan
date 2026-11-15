@@ -454,12 +454,12 @@ function renderKeranjangDesktopHTML(container, totalEl) {
       <button id="btn-grosir" onclick="setTipePenjualan('grosir')" class="flex-1 py-1 rounded-lg font-semibold text-xs text-slate-600 cursor-pointer">Grosir</button>
     </div>
     
-    <!-- Area List Item yang Fleksibel dan Bisa Di-scroll -->
-    <div class="space-y-3 my-1 text-xs divide-y divide-slate-100 overflow-y-auto flex-1 pr-1 border-y border-slate-100 py-2 min-h-[140px] max-h-[280px]">
+    <!-- Area List Item yang Fleksibel & Bisa Di-scroll (tinggi pas, tidak terlalu kecil) -->
+    <div class="space-y-3 my-1 text-xs divide-y divide-slate-100 overflow-y-auto flex-1 pr-1 border-y border-slate-100 py-2 min-h-[220px] max-h-[360px]">
   `;
 
   if (keranjang.length === 0) {
-    html += '<p class="text-slate-400 text-center py-6">Keranjang masih kosong</p>';
+    html += '<p class="text-slate-400 text-center py-10">Keranjang masih kosong</p>';
   } else {
     keranjang.forEach((item, index) => {
       const subtotal = item.harga * item.qty;
@@ -489,13 +489,13 @@ function renderKeranjangDesktopHTML(container, totalEl) {
   html += `
     </div>
     
-    <!-- Bagian Bawah Panel Pembayaran yang Tetap Menempel Rapi dan Kelihatan -->
-    <div class="space-y-2 pt-2 shrink-0 mt-auto border-t border-slate-100">
+    <!-- Bagian Bawah Panel Pembayaran yang Tetap Menempel Rapi, Terlihat Penuh, dan Tidak Terpotong -->
+    <div class="space-y-2 pt-2 shrink-0 mt-auto border-t border-slate-100 bg-white">
       <div class="flex justify-between items-center"><span class="text-xs text-slate-500">Mode Harga</span><span id="label-mode-harga" class="text-xs font-bold text-indigo-600 uppercase">ECERAN</span></div>
       <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-900">Total Tagihan</span><span class="font-black text-slate-900 text-base" id="total-harga">Rp ${total.toLocaleString('id-ID')}</span></div>
-      <div><label class="text-[11px] font-medium text-slate-600 block mb-0.5">Uang Tunai (Rp)</label><input type="number" id="uang-tunai" oninput="hitungKembalian()" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-right text-slate-800" placeholder="Ketik nominal..."></div>
+      <div><label class="text-[11px] font-medium text-slate-600 block mb-0.5">Uang Tunai Diterima (Rp)</label><input type="number" id="uang-tunai" oninput="hitungKembalian()" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-right text-slate-800" placeholder="Ketik nominal..."></div>
       <div class="flex justify-between items-center text-xs"><span class="text-slate-600">Kembalian</span><span id="label-kembalian" class="font-bold text-slate-600 text-xs">Rp 0</span></div>
-      <button onclick="prosesBayar()" class="w-full bg-[#008f5a] hover:bg-[#007a4d] text-white font-bold py-3 rounded-2xl text-xs transition cursor-pointer mt-1 uppercase shadow-md">Proses & Bayar</button>
+      <button onclick="prosesBayar()" class="w-full bg-[#008f5a] hover:bg-[#007a4d] text-white font-bold py-3.5 rounded-2xl text-xs transition cursor-pointer mt-1 uppercase shadow-md tracking-wider">Proses & Bayar Transaksi</button>
     </div>
   `;
   container.innerHTML = html;
